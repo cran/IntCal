@@ -6,10 +6,10 @@
 \usage{
 mix.curves(
   proportion = 0.5,
-  cc1 = "3Col_intcal20.14C",
-  cc2 = "3Col_marine20.14C",
+  cc1 = "IntCal20",
+  cc2 = "Marine20",
   name = "mixed.14C",
-  dirname = ".",
+  dir = c(),
   offset = c(0, 0),
   sep = "\\t"
 )
@@ -23,8 +23,7 @@ mix.curves(
 
 \item{name}{Name of the new calibration curve.}
 
-\item{dirname}{Directory where the file will be written. If using the default \code{dirname="."},
-the new curve will be saved in current working directory.}
+\item{dir}{Optional name of the directory where to save the file. Defaults to where the IntCal curves live.}
 
 \item{offset}{Any offset and error to be applied to \code{cc2} (default 0 +- 0).}
 
@@ -34,11 +33,11 @@ the new curve will be saved in current working directory.}
 A file containing the custom-made calibration curve, based on calibration curves \code{cc1} and \code{cc2}.
 }
 \description{
-If two curves need to be `mixed' to calibrate, e.g. for dates of mixed terrestrial and marine carbon sources, then this function can be used.
+If two curves need to be `mixed' to calibrate, e.g. for dates of mixed terrestrial and marine carbon sources, then this function can be used. The curve will be saved together with the calibration curves.
 }
 \details{
 The proportional contribution of each of both calibration curves has to be set.
 }
 \examples{
-mix.curves(, dirname=tempdir())
+mix.curves()
 }
