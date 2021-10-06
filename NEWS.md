@@ -1,3 +1,8 @@
+# IntCal 0.2.3
+* draw.ccurve now plots the correct label when using BCAD, and plots depths at the expected heights
+* draw.dates now plots multiple dates at the expected heights (with more precise dates peaking higher)
+* corrected the Rmd files which had erroneous formatting and some confusing examples
+
 # IntCal 0.2.2
 * in mix.curves(), calibration curves are now written to a temporary directory by default, as per CRAN policies
 * calibrate function now deals better with postbomb dates
