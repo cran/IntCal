@@ -14,11 +14,11 @@ NULL
 
 # todo: add another caldist function a la l.calib of coffee for single cal yrs but multiple dates? hpds sometimes are >100%??? prepare calib function with MCMC ccurve.
 
-# done: repaired problems with depths and calheights in draw.dates, draw.ccurve now plots correct label when BCAD, c14.lim now estimated correctly when a second curve is added
+# done: 
 
 
 #' @name list.ccurves
-#' @title List the calibration curves.
+#' @title List the calibration curves
 #' @description List the file names of the calibration curves available within the IntCal package.
 #' @export
 list.ccurves <- function() {
@@ -51,7 +51,7 @@ copyCalibrationCurve <- function(cc=1, postbomb=FALSE) {
 #' @return The calibration curve (invisible).
 #' @param cc Calibration curve for 14C dates: \code{cc=1} for IntCal20 (northern hemisphere terrestrial), \code{cc=2} for Marine20 (marine),
 #' \code{cc=3} for SHCal20 (southern hemisphere terrestrial). Alternatively, one can also write, e.g., "IntCal20", "Marine13".
-#' @param postbomb Use \code{postbomb=TRUE} to get a postbomb calibration curve (default \code{postbomb=FALSE}).
+#' @param postbomb Use \code{postbomb=TRUE} to get a postbomb calibration curve (default \code{postbomb=FALSE}). For monthly data, type e.g. \code{ccurve("sh1-2_monthly")}
 #' @examples
 #' intcal20 <- ccurve(1)
 #' marine20 <- ccurve(2)
@@ -66,6 +66,8 @@ copyCalibrationCurve <- function(cc=1, postbomb=FALSE) {
 #' Hogg et al. 2020 SHCal20 Southern Hemisphere calibration, 0-55,000 years cal BP. Radiocarbon 62. \doi{10.1017/RDC.2020.59}
 #'
 #' Hua et al. 2013 Atmospheric radiocarbon for the period 1950-2010. Radiocarbon 55(4), \doi{10.2458/azu_js_rc.v55i2.16177}
+#' 
+#' Hua et al. 2021 Atmospheric radiocarbon for the period 1950-2019. Radiocarbon in press,  \doi{10.1017/RDC.2021.95}
 #'
 #' Hughen et al. 2020 Marine20-the marine radiocarbon age calibration curve (0-55,000 cal BP). Radiocarbon 62. \doi{10.1017/RDC.2020.68}
 #'
@@ -135,15 +137,25 @@ ccurve <- function(cc=1, postbomb=FALSE) {
                                   fl <- "postbomb_SH1-2.14C" else
                                   if(tolower(cc) == "sh3")
                                     fl <- "postbomb_SH3.14C" else
-                                    if(tolower(cc) == "kure")
-                                      fl <- "kure.14C" else
-                                      if(tolower(cc) == "levinkromer")
-                                        fl <- "LevinKromer.14C" else
-                                        if(tolower(cc) == "santos")
-                                          fl <- "Santos.14C" else
-                                          if(tolower(cc) == "mixed")
-                                            fl <- "mixed.14C" else
-                                            stop("cannot find this curve", call.=FALSE)
+                                    if(tolower(cc) == "nh1_monthly")
+                                      fl <- "postbomb_NH1_monthly.14C" else
+                                      if(tolower(cc) == "nh2_monthly")
+                                        fl <- "postbomb_NH2_monthly.14C" else
+                                        if(tolower(cc) == "nh3_monthly")
+                                          fl <- "postbomb_NH3_monthly.14C" else
+                                          if(tolower(cc) == "sh1-2_monthly")
+                                            fl <- "postbomb_SH1-2_monthly.14C" else
+                                            if(tolower(cc) == "sh3_monthly")
+                                              fl <- "postbomb_SH3_monthly.14C" else
+                                              if(tolower(cc) == "kure")
+                                                fl <- "kure.14C" else
+                                                if(tolower(cc) == "levinkromer")
+                                                  fl <- "LevinKromer.14C" else
+                                                  if(tolower(cc) == "santos")
+                                                    fl <- "Santos.14C" else
+                                                    if(tolower(cc) == "mixed")
+                                                      fl <- "mixed.14C" else
+                                                      stop("cannot find this curve", call.=FALSE)
   cc <- system.file("extdata/", fl, package='IntCal')
   cc <- read.table(cc)
   invisible(cc)
@@ -204,5 +216,8 @@ mix.ccurves <- function(proportion=.5, cc1="IntCal20", cc2="Marine20", name="mix
 glue.ccurves <- function(prebomb="IntCal20", postbomb="NH1") {
   glued <- rbind(ccurve(prebomb, FALSE), ccurve(postbomb, TRUE))
   glued <- glued[order(glued[,1]),]
-  invisible(glued[-which(diff(glued[,1]) == 0),]) # remove repeated years
+  repeated <- which(diff(glued[,1]) == 0)
+  if(length(repeated) > 0)
+    invisible(glued[-repeated,]) else # remove any repeated years
+      invisible(glued[order(glued[,1]),])
 }
